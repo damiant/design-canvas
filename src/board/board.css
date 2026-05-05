@@ -1,0 +1,47 @@
+.board {
+  --grid-size: 100px;
+  --grid-line: #e0e0e0;
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+}
+
+@media (prefers-color-scheme: dark) {
+  .board {
+    --grid-line: #2a2a2a;
+  }
+}
+
+.board.is-panning {
+  cursor: grabbing;
+}
+
+.board-world {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.board-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 8px solid transparent;
+  box-sizing: content-box;
+  cursor: grab;
+  touch-action: none;
+}
+
+.board-container.is-dragging {
+  cursor: grabbing;
+}
