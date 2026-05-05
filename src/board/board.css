@@ -34,6 +34,7 @@
 
 .board-container {
   --container-hover-border: #1cadf1;
+  --container-component-border: #9ca3af;
 
   position: absolute;
   top: 0;
@@ -43,6 +44,10 @@
   cursor: grab;
   touch-action: none;
   transition: border-color 0.15s ease;
+}
+
+.board-container > * {
+  border: 1px solid var(--container-component-border);
 }
 
 .board-container:hover,
