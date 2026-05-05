@@ -2,6 +2,7 @@
 
 This project is an infinite board that will display components built by the user:
 
+- Use the orchestrator subagent to breakup work (particularing implementing multiple screens/components/ui) into tasks
 - **Always place new components on the board.** When the user asks for a new component, build the component in its own file outside `src/board/`, then mount it onto the board via `board.add(element, { x, y })` from `src/main.ts`. Never render a component directly into `#app` or anywhere else — every component the user sees must live inside a `BoardContainer` on the board.
 - When asked to create a component do not add border radius and shadows around these.
 - When asked to create a page, site, screen or UI treat this as a component to create.
