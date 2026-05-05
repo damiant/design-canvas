@@ -26,9 +26,6 @@ export function createContainer(
     null;
 
   const onPointerDown = (e: PointerEvent) => {
-    // Only react to drags initiated on the transparent border (the container
-    // itself), not on the inner content. The inner content gets its own events.
-    if (e.target !== element) return;
     e.stopPropagation();
     dragStart = { px: e.clientX, py: e.clientY, ox: x, oy: y };
     element.setPointerCapture(e.pointerId);
