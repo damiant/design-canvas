@@ -33,6 +33,8 @@
 }
 
 .board-container {
+  --container-hover-border: #1cadf1;
+
   position: absolute;
   top: 0;
   left: 0;
@@ -40,6 +42,12 @@
   box-sizing: content-box;
   cursor: grab;
   touch-action: none;
+  transition: border-color 0.15s ease;
+}
+
+.board-container:hover,
+.board-container.is-dragging {
+  border-color: var(--container-hover-border);
 }
 
 .board-container.is-dragging {
