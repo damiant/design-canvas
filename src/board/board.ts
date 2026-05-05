@@ -20,12 +20,55 @@ export function createBoard(mount: HTMLElement): Board {
 
   let panX = 0;
   let panY = 0;
+  let zoom = 1;
+  const MIN_ZOOM = 0.2;
+  const MAX_ZOOM = 4;
+  const GRID_SIZE = 100;
 
-  const applyPan = () => {
-    world.style.transform = `translate(${panX}px, ${panY}px)`;
+  const zoomIndicator = document.createElement("button");
+  zoomIndicator.type = "button";
+  zoomIndicator.className = "board-zoom-indicator";
+  zoomIndicator.hidden = true;
+  zoomIndicator.title = "Reset zoom to 100%";
+  zoomIndicator.addEventListener("click", () => {
+    zoom = 1;
+    applyTransform();
+  });
+  element.appendChild(zoomIndicator);
+
+  const applyTransform = () => {
+    world.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+    const size = GRID_SIZE * zoom;
+    element.style.backgroundSize = `${size}px ${size}px`;
     element.style.backgroundPosition = `${panX}px ${panY}px`;
+    if (zoom === 1) {
+      zoomIndicator.hidden = true;
+    } else {
+      zoomIndicator.hidden = false;
+      zoomIndicator.textContent = `${Math.round(zoom * 100)}%`;
+    }
   };
-  applyPan();
+  const applyPan = applyTransform;
+  applyTransform();
+
+  const onWheel = (e: WheelEvent) => {
+    e.preventDefault();
+    const rect = element.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    // World point under cursor before zoom.
+    const wx = (cx - panX) / zoom;
+    const wy = (cy - panY) / zoom;
+    const factor = Math.exp(-e.deltaY * 0.0015);
+    const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, zoom * factor));
+    if (newZoom === zoom) return;
+    zoom = newZoom;
+    // Keep the same world point under the cursor after zoom.
+    panX = cx - wx * zoom;
+    panY = cy - wy * zoom;
+    applyTransform();
+  };
+  element.addEventListener("wheel", onWheel, { passive: false });
 
   let panStart: { px: number; py: number; ox: number; oy: number } | null =
     null;
@@ -73,15 +116,16 @@ export function createBoard(mount: HTMLElement): Board {
     const viewW = element.clientWidth || window.innerWidth;
     const viewH = element.clientHeight || window.innerHeight;
     // Center of the current viewport in world coordinates.
-    const centerX = -panX + viewW / 2 - width / 2;
-    const centerY = -panY + viewH / 2 - height / 2;
+    const centerX = (viewW / 2 - panX) / zoom - width / 2;
+    const centerY = (viewH / 2 - panY) / zoom - height / 2;
 
+    const boardRect = element.getBoundingClientRect();
     const existing = placedHandles.map((h) => {
       const r = h.element.getBoundingClientRect();
       // Convert client rect back to world coordinates.
-      const wx = r.left - element.getBoundingClientRect().left - panX;
-      const wy = r.top - element.getBoundingClientRect().top - panY;
-      return { x: wx, y: wy, w: r.width, h: r.height };
+      const wx = (r.left - boardRect.left - panX) / zoom;
+      const wy = (r.top - boardRect.top - panY) / zoom;
+      return { x: wx, y: wy, w: r.width / zoom, h: r.height / zoom };
     });
 
     const fits = (x: number, y: number) =>
@@ -122,17 +166,17 @@ export function createBoard(mount: HTMLElement): Board {
       if (x === undefined || y === undefined) {
         // Mount off-screen first to measure intrinsic size, then place.
         content.style.visibility = "hidden";
-        const probe = createContainer(content, { x: -99999, y: -99999 });
+        const probe = createContainer(content, { x: -99999, y: -99999 }, () => zoom);
         world.appendChild(probe.element);
         const rect = probe.element.getBoundingClientRect();
-        const spot = findFreeSpot(rect.width, rect.height);
+        const spot = findFreeSpot(rect.width / zoom, rect.height / zoom);
         probe.remove();
         content.style.visibility = "";
         x = x ?? spot.x;
         y = y ?? spot.y;
       }
 
-      const handle = createContainer(content, { x, y });
+      const handle = createContainer(content, { x, y }, () => zoom);
       world.appendChild(handle.element);
       placedHandles.push(handle);
       const originalRemove = handle.remove;

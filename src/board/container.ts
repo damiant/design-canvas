@@ -9,6 +9,7 @@ export interface BoardContainerHandle {
 export function createContainer(
   content: HTMLElement,
   opts: ContainerOptions,
+  getZoom: () => number = () => 1,
 ): BoardContainerHandle {
   const element = document.createElement("div");
   element.className = "board-container";
@@ -34,8 +35,9 @@ export function createContainer(
 
   const onPointerMove = (e: PointerEvent) => {
     if (!dragStart) return;
-    x = dragStart.ox + (e.clientX - dragStart.px);
-    y = dragStart.oy + (e.clientY - dragStart.py);
+    const z = getZoom() || 1;
+    x = dragStart.ox + (e.clientX - dragStart.px) / z;
+    y = dragStart.oy + (e.clientY - dragStart.py) / z;
     applyPosition();
   };
 
