@@ -14,8 +14,8 @@ export function createContainer(
   element.className = "board-container";
   element.appendChild(content);
 
-  let x = opts.x;
-  let y = opts.y;
+  let x = opts.x ?? 0;
+  let y = opts.y ?? 0;
 
   const applyPosition = () => {
     element.style.transform = `translate(${x}px, ${y}px)`;

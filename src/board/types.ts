@@ -4,6 +4,6 @@ export interface Point {
 }
 
 export interface ContainerOptions {
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
 }
