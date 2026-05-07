@@ -13,6 +13,14 @@ export function createContainer(
 ): BoardContainerHandle {
   const element = document.createElement("div");
   element.className = "board-container";
+
+  if (opts.name) {
+    const label = document.createElement("span");
+    label.className = "board-container-label";
+    label.textContent = opts.name;
+    element.appendChild(label);
+  }
+
   element.appendChild(content);
 
   let x = opts.x ?? 0;
