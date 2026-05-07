@@ -37,10 +37,12 @@ export function createBoard(mount: HTMLElement): Board {
   element.appendChild(zoomIndicator);
 
   const applyTransform = () => {
-    world.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+    const rpx = Math.round(panX);
+    const rpy = Math.round(panY);
+    world.style.transform = `translate3d(${rpx}px, ${rpy}px, 0) scale(${zoom})`;
     const size = GRID_SIZE * zoom;
     element.style.backgroundSize = `${size}px ${size}px`;
-    element.style.backgroundPosition = `${panX}px ${panY}px`;
+    element.style.backgroundPosition = `${Math.round(panX)}px ${Math.round(panY)}px`;
     if (zoom === 1) {
       zoomIndicator.hidden = true;
     } else {
