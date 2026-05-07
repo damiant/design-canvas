@@ -1,6 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  /* Spacing tokens */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xlg: 40px;
+
+  /* Font size tokens */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xlg: 1.5rem;
+
+  /* Font family */
+  --font-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+
+  /* Semantic color tokens — light mode defaults */
+  --color-foreground: #1a1b23;
+  --color-background: #ffffff;
+  --color-muted: #6b7280;
+  --color-muted-bg: #f3f4f6;
+  --color-accent: #6366f1;
+  --color-accent-foreground: #ffffff;
+  --color-border: #e5e7eb;
+  --color-surface: #f9fafb;
+  --color-surface-raised: #ffffff;
+  --color-destructive: #ef4444;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+}
+
 :root {
   --bg: #fff;
-
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
 
   font: 18px/145% var(--sans);
@@ -20,6 +54,13 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #16171d;
+    --color-foreground: #f3f4f6;
+    --color-background: #16171d;
+    --color-muted: #9ca3af;
+    --color-muted-bg: #1f2028;
+    --color-border: #2d2e3a;
+    --color-surface: #1f2028;
+    --color-surface-raised: #2a2b36;
   }
 }
 

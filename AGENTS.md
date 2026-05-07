@@ -10,6 +10,32 @@ This project is an infinite board that will display components built by the user
 - **Modify components, not the board.** When the user asks to change behavior, styling, or content, the change belongs in the component file under `src/` (outside `src/board/`). Do not edit any file in `src/board/` to satisfy a component-level request — the board (panning, container dragging, the 8px transparent border, the grid background, the world transform, the public API) is fixed infrastructure. Only touch `src/board/` if the user explicitly asks to change the board itself.
 - **Keep the board independent of components.** `src/board/` must not import from anywhere else in `src/`. Components are passed in as plain `HTMLElement`s; the board never knows what's inside a container.
 
+## Component Coding Conventions
+
+### File Structure
+- Each feature lives in `src/features/{feature-name}/`
+- One component per file, named after the component (e.g. `Header.tsx`, `ProductCard.tsx`)
+- `index.tsx` is the feature root — it composes sub-components and mounts via `mountReact`
+- Mount onto the board from `src/main.ts` using `mountReact(element, { x, y })`
+
+### React
+- Use React functional components with TypeScript (`.tsx`)
+- Follow React best practices: hooks at the top level, single responsibility per component, props typed with interfaces
+- Never use class components
+
+### Styling — Tailwind Only
+- Use Tailwind utility classes exclusively — no inline `style` props, no hardcoded values, no new CSS files per component
+- All spacing and sizing must use token-named classes: `p-xs`, `p-sm`, `p-md`, `p-lg`, `p-xlg`, `gap-sm`, `m-md`, etc.
+- All colors must use semantic token classes: `text-foreground`, `bg-background`, `bg-muted`, `text-muted`, `bg-accent`, `text-accent-foreground`, `border-border`, `bg-surface`, etc.
+- All font sizes must use token classes: `text-xs`, `text-sm`, `text-md`, `text-lg`, `text-xlg`
+- Font family: `font-sans`
+- Never hardcode colors, padding, margins, font sizes, or font families in any form
+
+### Icons
+- Use `lucide-react` for all icons — never use emojis as visual elements
+- Import icons by name: `import { Search, ChevronRight } from "lucide-react"`
+- Size icons with Tailwind: `w-4 h-4`, `w-5 h-5`, etc.
+
 ## How to Install, Build and Test
 
 This project uses **Vite+** (CLI: `vp`). Common commands:
