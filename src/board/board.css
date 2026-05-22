@@ -48,17 +48,60 @@
   transition: border-color 0.15s ease;
 }
 
-.board-container > * {
+.board-container > *:not(.board-container-resize-handle):not(.board-container-label) {
   border: 1px solid var(--container-component-border);
 }
 
 .board-container:hover,
-.board-container.is-dragging {
+.board-container.is-dragging,
+.board-container.is-resizing {
   border-color: var(--container-hover-border);
 }
 
 .board-container.is-dragging {
   cursor: grabbing;
+}
+
+.board-container-resize-handle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: transparent;
+  box-sizing: border-box;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.board-container:hover .board-container-resize-handle,
+.board-container.is-resizing .board-container-resize-handle {
+  opacity: 1;
+  background: #fff;
+  border: 2px solid var(--container-hover-border);
+}
+
+.board-container-resize-handle[data-corner="nw"] {
+  top: -8px;
+  left: -8px;
+  cursor: nwse-resize;
+}
+
+.board-container-resize-handle[data-corner="ne"] {
+  top: -8px;
+  right: -8px;
+  cursor: nesw-resize;
+}
+
+.board-container-resize-handle[data-corner="sw"] {
+  bottom: -8px;
+  left: -8px;
+  cursor: nesw-resize;
+}
+
+.board-container-resize-handle[data-corner="se"] {
+  bottom: -8px;
+  right: -8px;
+  cursor: nwse-resize;
 }
 
 .board-container-label {
@@ -78,7 +121,8 @@
 }
 
 .board-container:hover .board-container-label,
-.board-container.is-dragging .board-container-label {
+.board-container.is-dragging .board-container-label,
+.board-container.is-resizing .board-container-label {
   opacity: 1;
 }
 
