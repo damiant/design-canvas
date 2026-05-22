@@ -106,7 +106,7 @@ export function createBoard(mount: HTMLElement): Board {
     if (!detail?.name) return;
     if (selectedNames.includes(detail.name)) return;
     selectedNames.push(detail.name);
-    const text = selectedNames.map((n) => `"${n} component"`).join(", ");
+    const text = selectedNames.map((n) => `"${n} component"`).join(", ") + " ";
     void navigator.clipboard?.writeText(text);
   });
 
@@ -146,7 +146,10 @@ export function createBoard(mount: HTMLElement): Board {
    * Searches outward in a square spiral around the viewport center so that
    * auto-placed components stay near where the user is currently looking.
    */
-  const findFreeSpot = (width: number, height: number): { x: number; y: number } => {
+  const findFreeSpot = (
+    width: number,
+    height: number,
+  ): { x: number; y: number } => {
     const viewW = element.clientWidth || window.innerWidth;
     const viewH = element.clientHeight || window.innerHeight;
     // Center of the current viewport in world coordinates.
@@ -193,7 +196,11 @@ export function createBoard(mount: HTMLElement): Board {
 
   let animationFrame: number | null = null;
 
-  const animateViewport = (targetPanX: number, targetPanY: number, targetZoom: number) => {
+  const animateViewport = (
+    targetPanX: number,
+    targetPanY: number,
+    targetZoom: number,
+  ) => {
     if (animationFrame !== null) cancelAnimationFrame(animationFrame);
 
     const startPanX = panX;
@@ -202,7 +209,8 @@ export function createBoard(mount: HTMLElement): Board {
     const duration = 550;
     const startTime = performance.now();
 
-    const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    const easeInOut = (t: number) =>
+      t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
 
     const step = (now: number) => {
       const t = Math.min(1, (now - startTime) / duration);
@@ -221,7 +229,11 @@ export function createBoard(mount: HTMLElement): Board {
     animationFrame = requestAnimationFrame(step);
   };
 
-  const zoomToFitElement = (containerEl: HTMLElement, worldX: number, worldY: number) => {
+  const zoomToFitElement = (
+    containerEl: HTMLElement,
+    worldX: number,
+    worldY: number,
+  ) => {
     const tryMeasure = (attempts: number) => {
       const rect = containerEl.getBoundingClientRect();
       if ((rect.width === 0 || rect.height === 0) && attempts > 0) {
@@ -236,7 +248,10 @@ export function createBoard(mount: HTMLElement): Board {
 
       // 20% padding on each side => component fits in 60% of the viewport.
       const PADDING_FACTOR = 1 / 0.6;
-      const fitZoom = Math.min(viewW / (elW * PADDING_FACTOR), viewH / (elH * PADDING_FACTOR));
+      const fitZoom = Math.min(
+        viewW / (elW * PADDING_FACTOR),
+        viewH / (elH * PADDING_FACTOR),
+      );
       // Never magnify past 1× — small components shouldn't fill the viewport.
       const targetZoom = Math.min(1, Math.max(MIN_ZOOM, fitZoom));
 
@@ -258,7 +273,11 @@ export function createBoard(mount: HTMLElement): Board {
       if (x === undefined || y === undefined) {
         // Mount off-screen first to measure intrinsic size, then place.
         content.style.visibility = "hidden";
-        const probe = createContainer(content, { x: -99999, y: -99999 }, () => zoom);
+        const probe = createContainer(
+          content,
+          { x: -99999, y: -99999 },
+          () => zoom,
+        );
         world.appendChild(probe.element);
         const rect = probe.element.getBoundingClientRect();
         const spot = findFreeSpot(rect.width / zoom, rect.height / zoom);
