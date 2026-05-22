@@ -13,17 +13,20 @@ This project is an infinite board that will display components built by the user
 ## Component Coding Conventions
 
 ### File Structure
+
 - Each feature lives in `src/features/{feature-name}/`
 - One component per file, named after the component (e.g. `Header.tsx`, `ProductCard.tsx`)
 - `index.tsx` is the feature root — it composes sub-components and mounts via `mountReact`
 - Mount onto the board from `src/main.ts` using `mountReact(element, { x, y })`
 
 ### React
+
 - Use React functional components with TypeScript (`.tsx`)
 - Follow React best practices: hooks at the top level, single responsibility per component, props typed with interfaces
 - Never use class components
 
 ### Styling — Tailwind Only
+
 - Use Tailwind utility classes exclusively — no inline `style` props, no hardcoded values, no new CSS files per component
 - All spacing and sizing must use token-named classes: `p-xs`, `p-sm`, `p-md`, `p-lg`, `p-xlg`, `gap-sm`, `m-md`, etc.
 - All colors must use semantic token classes: `text-foreground`, `bg-background`, `bg-muted`, `text-muted`, `bg-accent`, `text-accent-foreground`, `border-border`, `bg-surface`, etc.
@@ -32,6 +35,7 @@ This project is an infinite board that will display components built by the user
 - Never hardcode colors, padding, margins, font sizes, or font families in any form
 
 ### Icons
+
 - Use `lucide-react` for all icons — never use emojis as visual elements
 - Import icons by name: `import { Search, ChevronRight } from "lucide-react"`
 - Size icons with Tailwind: `w-4 h-4`, `w-5 h-5`, etc.
@@ -48,3 +52,5 @@ This project uses **Vite+** (CLI: `vp`). Common commands:
 Do not invoke `npm`/`pnpm`/`yarn`/`vite`/`vitest` directly — always go through `vp`.
 
 For anything else related to Vite+ (commands, dependency management, imports from `vite-plus`, CI, gotchas), consult the **`vite-plus` skill** at `.builder/skills/vite-plus/SKILL.md`.
+
+- Keep conversation with the user brief and non technical and add jokes about the work done.
