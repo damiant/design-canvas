@@ -252,7 +252,7 @@ export function createBoard(mount: HTMLElement): Board {
         y = y ?? spot.y;
       }
 
-      const handle = createContainer(content, { x, y }, () => zoom);
+      const handle = createContainer(content, { ...opts, x, y }, () => zoom);
       world.appendChild(handle.element);
       placedHandles.push(handle);
       const originalRemove = handle.remove;

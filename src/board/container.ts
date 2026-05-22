@@ -14,12 +14,15 @@ export function createContainer(
   const element = document.createElement("div");
   element.className = "board-container";
 
-  if (opts.name) {
-    const label = document.createElement("span");
-    label.className = "board-container-label";
-    label.textContent = opts.name;
-    element.appendChild(label);
-  }
+  const rawName = typeof opts.name === "string" ? opts.name.trim() : "";
+  const displayName = rawName && rawName !== "undefined" && rawName !== "null"
+    ? rawName
+    : "Untitled";
+  element.title = displayName;
+  const label = document.createElement("span");
+  label.className = "board-container-label";
+  label.textContent = displayName;
+  element.appendChild(label);
 
   element.appendChild(content);
 
