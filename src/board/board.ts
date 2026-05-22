@@ -18,12 +18,23 @@ export function createBoard(mount: HTMLElement): Board {
   world.className = "board-world";
   element.appendChild(world);
 
-  let panX = 0;
-  let panY = 0;
-  let zoom = 1;
+  const STORAGE_KEY = "board-viewport";
   const MIN_ZOOM = 0.2;
   const MAX_ZOOM = 4;
   const GRID_SIZE = 100;
+
+  const saved = (() => {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  let panX: number = saved?.panX ?? 0;
+  let panY: number = saved?.panY ?? 0;
+  let zoom: number = saved?.zoom ?? 1;
 
   const zoomIndicator = document.createElement("button");
   zoomIndicator.type = "button";
@@ -48,6 +59,11 @@ export function createBoard(mount: HTMLElement): Board {
     } else {
       zoomIndicator.hidden = false;
       zoomIndicator.textContent = `${Math.round(zoom * 100)}%`;
+    }
+    try {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ panX, panY, zoom }));
+    } catch {
+      // sessionStorage unavailable — silently skip
     }
   };
   const applyPan = applyTransform;
