@@ -29,9 +29,8 @@
   position: absolute;
   inset: 0;
   transform-origin: 0 0;
-  will-change: transform;
-  -webkit-font-smoothing: subpixel-antialiased;
-  -moz-osx-font-smoothing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
