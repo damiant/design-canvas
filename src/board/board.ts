@@ -175,6 +175,62 @@ export function createBoard(mount: HTMLElement): Board {
     return { x: centerX + placedHandles.length * step, y: centerY };
   };
 
+  let animationFrame: number | null = null;
+
+  const animateViewport = (targetPanX: number, targetPanY: number, targetZoom: number) => {
+    if (animationFrame !== null) cancelAnimationFrame(animationFrame);
+
+    const startPanX = panX;
+    const startPanY = panY;
+    const startZoom = zoom;
+    const duration = 550;
+    const startTime = performance.now();
+
+    const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+
+    const step = (now: number) => {
+      const t = Math.min(1, (now - startTime) / duration);
+      const e = easeInOut(t);
+      zoom = startZoom + (targetZoom - startZoom) * e;
+      panX = startPanX + (targetPanX - startPanX) * e;
+      panY = startPanY + (targetPanY - startPanY) * e;
+      applyTransform();
+      if (t < 1) {
+        animationFrame = requestAnimationFrame(step);
+      } else {
+        animationFrame = null;
+      }
+    };
+
+    animationFrame = requestAnimationFrame(step);
+  };
+
+  const zoomToFitElement = (containerEl: HTMLElement, worldX: number, worldY: number) => {
+    const tryMeasure = (attempts: number) => {
+      const rect = containerEl.getBoundingClientRect();
+      if ((rect.width === 0 || rect.height === 0) && attempts > 0) {
+        requestAnimationFrame(() => tryMeasure(attempts - 1));
+        return;
+      }
+
+      const viewW = element.clientWidth || window.innerWidth;
+      const viewH = element.clientHeight || window.innerHeight;
+      const elW = rect.width / zoom;
+      const elH = rect.height / zoom;
+
+      const targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM,
+        Math.min(viewW / (elW * 1.4), viewH / (elH * 1.4))
+      ));
+
+      const targetPanX = viewW / 2 - (worldX + elW / 2) * targetZoom;
+      const targetPanY = viewH / 2 - (worldY + elH / 2) * targetZoom;
+
+      animateViewport(targetPanX, targetPanY, targetZoom);
+    };
+
+    requestAnimationFrame(() => tryMeasure(10));
+  };
+
   return {
     element,
     add(content, opts) {
@@ -203,6 +259,9 @@ export function createBoard(mount: HTMLElement): Board {
         if (idx >= 0) placedHandles.splice(idx, 1);
         originalRemove.call(handle);
       };
+
+      zoomToFitElement(handle.element, x, y);
+
       return handle;
     },
     destroy() {
