@@ -105,13 +105,13 @@
 
 .board-container-label {
   position: absolute;
-  top: -4px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 100%;
+  right: -8px;
   font: 600 9px/1 var(--sans, system-ui, sans-serif);
   color: #fff;
   background: var(--container-hover-border);
-  padding: 2px 6px;
+  padding: 4px 8px 3px;
+  border-radius: 4px 4px 0 0;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
