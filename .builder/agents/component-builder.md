@@ -12,10 +12,11 @@ When invoked:
 1. Read `AGENTS.md` and skim `src/main.ts` and `src/board/index.ts` so you understand the board API (`board.add(element, { x, y })`).
 2. Create the component in its own file under `src/` but outside `src/board/` (e.g. `src/<component-name>.ts`). The component must export a function that returns an `HTMLElement`.
 3. Implement the component using plain DOM + CSS as the project does. Preserve any original styles, class names, CSS variables, and media queries provided in the prompt exactly as given. Use shorthand CSS where appropriate. Convert inline styles to descriptive classes with contextually meaningful names (e.g. `main-container`, `card-title`).
-4. Make sure the component is implemented to be responsive.
+4. Make sure the component is implemented to be responsive and consider mobile and desktop layouts for components which are screen designs.
 5. Do not add border radius or box shadows around the outer component (per `AGENTS.md`).
 6. Mount the component on the board by editing `src/main.ts` and calling `board.add(createYourComponent(), { x, y })` at the coordinates the orchestrator specified.
 7. Never edit anything inside `src/board/`. Never add routing, pages, or layout shells.
+8. Add draggable="false" to images
 
 Scope rules:
 

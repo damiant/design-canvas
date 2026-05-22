@@ -73,7 +73,6 @@
   transition: opacity 0.15s ease;
 }
 
-.board-container:hover .board-container-resize-handle,
 .board-container.is-resizing .board-container-resize-handle {
   opacity: 1;
   background: #fff;
