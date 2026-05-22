@@ -218,9 +218,11 @@ export function createBoard(mount: HTMLElement): Board {
       const elW = rect.width / zoom;
       const elH = rect.height / zoom;
 
-      const targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM,
-        Math.min(viewW / (elW * 1.4), viewH / (elH * 1.4))
-      ));
+      // 20% padding on each side => component fits in 60% of the viewport.
+      const PADDING_FACTOR = 1 / 0.6;
+      const fitZoom = Math.min(viewW / (elW * PADDING_FACTOR), viewH / (elH * PADDING_FACTOR));
+      // Never magnify past 1× — small components shouldn't fill the viewport.
+      const targetZoom = Math.min(1, Math.max(MIN_ZOOM, fitZoom));
 
       const targetPanX = viewW / 2 - (worldX + elW / 2) * targetZoom;
       const targetPanY = viewH / 2 - (worldY + elH / 2) * targetZoom;
