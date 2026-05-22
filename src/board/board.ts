@@ -106,7 +106,7 @@ export function createBoard(mount: HTMLElement): Board {
     if (!detail?.name) return;
     if (selectedNames.includes(detail.name)) return;
     selectedNames.push(detail.name);
-    const text = selectedNames.map((n) => `${n} component`).join("\n");
+    const text = selectedNames.map((n) => `"${n} component"`).join(", ");
     void navigator.clipboard?.writeText(text);
   });
 
