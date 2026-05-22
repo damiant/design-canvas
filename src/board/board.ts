@@ -99,6 +99,17 @@ export function createBoard(mount: HTMLElement): Board {
     element.classList.add("is-panning");
   };
 
+  const selectedNames: string[] = [];
+
+  element.addEventListener("board-container-click", (e: Event) => {
+    const detail = (e as CustomEvent<{ name: string }>).detail;
+    if (!detail?.name) return;
+    if (selectedNames.includes(detail.name)) return;
+    selectedNames.push(detail.name);
+    const text = selectedNames.map((n) => `${n} component`).join("\n");
+    void navigator.clipboard?.writeText(text);
+  });
+
   const onPointerMove = (e: PointerEvent) => {
     if (!panStart) return;
     panX = panStart.ox + (e.clientX - panStart.px);
@@ -108,11 +119,16 @@ export function createBoard(mount: HTMLElement): Board {
 
   const endPan = (e: PointerEvent) => {
     if (!panStart) return;
+    const moved = Math.hypot(e.clientX - panStart.px, e.clientY - panStart.py);
     panStart = null;
     if (element.hasPointerCapture(e.pointerId)) {
       element.releasePointerCapture(e.pointerId);
     }
     element.classList.remove("is-panning");
+    if (moved < 4 && e.type === "pointerup" && selectedNames.length > 0) {
+      selectedNames.length = 0;
+      void navigator.clipboard?.writeText("");
+    }
   };
 
   element.addEventListener("pointerdown", onPointerDown);

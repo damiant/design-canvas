@@ -54,11 +54,18 @@ export function createContainer(
 
   const endDrag = (e: PointerEvent) => {
     if (!dragStart) return;
+    const moved = Math.hypot(e.clientX - dragStart.px, e.clientY - dragStart.py);
     dragStart = null;
     if (element.hasPointerCapture(e.pointerId)) {
       element.releasePointerCapture(e.pointerId);
     }
     element.classList.remove("is-dragging");
+    if (moved < 4 && e.type === "pointerup") {
+      element.dispatchEvent(new CustomEvent("board-container-click", {
+        bubbles: true,
+        detail: { name: displayName },
+      }));
+    }
   };
 
   element.addEventListener("pointerdown", onPointerDown);
